@@ -5,6 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -19,6 +23,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.sgenlecroyant.security.config.websecurity.authentication.AppUserService;
 import com.sgenlecroyant.security.config.websecurity.authority.Role;
 
 // @formatter:off
@@ -29,6 +34,9 @@ public class AppSecurityConfig {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private AppUserService appUserService;
 
 	@Bean
 	public SecurityFilterChain getWebSecurityConfigurer(HttpSecurity httpSecurity) throws Exception {
@@ -55,24 +63,36 @@ public class AppSecurityConfig {
 		return webSecurityConfigurer;
 	}
 
-//	@Bean
-	public UserDetailsManager getUsersDetails() {
-
-		
-		UserDetails peterson = User.builder()
-								.username("peterson")
-								.password(this.passwordEncoder.encode("password"))
-								.authorities(Role.REG_USER.getGrantedAuthorities())
-								.build();
-		
-		UserDetails smith = User.builder()
-								.username("smith")
-								.password(this.passwordEncoder.encode("password"))
-								.authorities(Role.ADMIN.getGrantedAuthorities())
-								.build();
-		
-		return new InMemoryUserDetailsManager(peterson, smith);
+	protected void configureAuthenticationManager(AuthenticationManagerBuilder auth) throws Exception {
+		auth.authenticationProvider(getAuthenticationManager());
 	}
+	
+	public AuthenticationProvider getAuthenticationManager() {
+		DaoAuthenticationProvider daoAuthenticationProvider = 
+				new DaoAuthenticationProvider();
+		daoAuthenticationProvider.setUserDetailsService(appUserService);
+		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+		return daoAuthenticationProvider;
+	}
+
+//	@Bean
+//	public UserDetailsManager getUsersDetails() {
+//
+//		
+//		UserDetails peterson = User.builder()
+//								.username("peterson")
+//								.password(this.passwordEncoder.encode("password"))
+//								.authorities(Role.REG_USER.getGrantedAuthorities())
+//								.build();
+//		
+//		UserDetails smith = User.builder()
+//								.username("smith")
+//								.password(this.passwordEncoder.encode("password"))
+//								.authorities(Role.ADMIN.getGrantedAuthorities())
+//								.build();
+//		
+//		return new InMemoryUserDetailsManager(peterson, smith);
+//	}
 
 //	@Override
 //	protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -92,6 +112,11 @@ public class AppSecurityConfig {
 //			.httpBasic();
 ////			.formLogin()
 //	}
+	
+	
+	
+	
+	
 	
 
 }
