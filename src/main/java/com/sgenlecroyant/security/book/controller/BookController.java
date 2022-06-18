@@ -20,6 +20,10 @@ public class BookController {
 	
 	private BookService bookService;
 	
+	public BookController(BookService bookService) {
+		this.bookService = bookService;
+	}
+
 	@GetMapping(value = "/books/{id}")
 	private ResponseEntity<Book> fetchBookById(@PathVariable Long id){
 		return new ResponseEntity<Book>(this.bookService.fetchBookById(id).get(), HttpStatus.OK);
