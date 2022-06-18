@@ -14,6 +14,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 
+// @formatter:off
 @Configuration
 @EnableWebSecurity
 public class AppSecurityConfig {
@@ -24,9 +25,16 @@ public class AppSecurityConfig {
 	@Bean
 	public SecurityFilterChain getWebSecurityConfigurer(HttpSecurity httpSecurity) throws Exception {
 
-		DefaultSecurityFilterChain webSecurityConfigurer = httpSecurity.csrf().disable().authorizeHttpRequests()
-				.antMatchers(HttpMethod.GET, "/", "/css", "/js").permitAll().anyRequest().authenticated().and()
-				.formLogin().and().build();
+		DefaultSecurityFilterChain webSecurityConfigurer = 
+				
+				httpSecurity.csrf().disable()
+							.authorizeHttpRequests()
+							.antMatchers(HttpMethod.GET, "/", "/css", "/js").permitAll()
+							.anyRequest().authenticated()
+								.and()
+								.httpBasic()
+								.and()
+								.build();
 
 		return webSecurityConfigurer;
 	}
@@ -34,16 +42,16 @@ public class AppSecurityConfig {
 	@Bean
 	public UserDetailsManager getUsersDetails() {
 
-		// @formatter:off
+		
 		UserDetails peterson = User.builder()
 								.username("peterson")
 								.password(this.passwordEncoder.encode("password"))
 								.roles("REG_USER").build();
 		
 		UserDetails smith = User.builder()
-				.username("smith")
-				.password(this.passwordEncoder.encode("password"))
-				.roles("ADMIN").build();
+								.username("smith")
+								.password(this.passwordEncoder.encode("password"))
+								.roles("ADMIN").build();
 		
 		return new InMemoryUserDetailsManager(peterson, smith);
 	}
