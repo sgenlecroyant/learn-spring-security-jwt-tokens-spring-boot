@@ -1,6 +1,10 @@
 package com.sgenlecroyant.security.config.websecurity.authority;
 
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public enum Role {
 	
@@ -15,6 +19,23 @@ public enum Role {
 
 	public Set<Permission> getPermissions() {
 		return permissions;
+	}
+	
+	public Set<? extends GrantedAuthority> getGrantedAuthorities(){
+		
+		Set<SimpleGrantedAuthority> grantedAuthorities = this.getPermissions()
+			.stream()
+			.map((permission) -> new SimpleGrantedAuthority(permission.getPermission()))
+			.collect(Collectors.toSet());
+		
+		grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" +this.name()));
+		
+		return grantedAuthorities;
+		
+	}
+	
+	public String getRole() {
+		return this.name();
 	}
 	
 }

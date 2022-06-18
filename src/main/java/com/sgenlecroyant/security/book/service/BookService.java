@@ -1,24 +1,22 @@
+//package com.sgenlecroyant.security;
 package com.sgenlecroyant.security.book.service;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.sgenlecroyant.security.book.action.OnBookAction;
 import com.sgenlecroyant.security.book.entity.Book;
 import com.sgenlecroyant.security.book.repository.BookRepository;
 
-@Service
+@Component
 public class BookService implements OnBookAction{
 	
-	private final BookRepository bookRepository;
-
 	@Autowired
-	public BookService(BookRepository bookRepository) {
-		this.bookRepository = bookRepository;
-	}
+	private BookRepository bookRepository;
 
 	@Override
 	public Optional<Book> fetchBookById(Long id) {
