@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sgenlecroyant.security.book.entity.Book;
 import com.sgenlecroyant.security.book.repository.BookRepository;
 
 @SpringBootApplication
+@RestController
 public class MasteringSpringSecurityApplication implements CommandLineRunner{
 	
 	@Autowired
@@ -29,6 +32,11 @@ public class MasteringSpringSecurityApplication implements CommandLineRunner{
 		
 		this.bookRepository.saveAll(List.of(loveYouToTheMoon, riskyBet));
 
+	}
+	
+	@GetMapping(value = "/")
+	private String getWelcomeMessage() {
+		return "Welcome to Spring Security!";
 	}
 
 }
