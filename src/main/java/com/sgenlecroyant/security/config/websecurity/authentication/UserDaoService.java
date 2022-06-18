@@ -2,6 +2,7 @@ package com.sgenlecroyant.security.config.websecurity.authentication;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,20 +15,12 @@ import com.sgenlecroyant.security.config.websecurity.authority.Role;
 import com.sgenlecroyant.security.user.entity.AppUser;
 
 @Service
-public class UserDaoService implements UserDetailsService{
+public class UserDaoService implements UserDao{
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		
-		return this.getAppUsers()
-					.stream()
-					.filter((appUser) -> appUser.getUsername().equals(username))
-					.findFirst()
-					.orElseThrow(() -> new UsernameNotFoundException("username not found: " +username));
-	}
+
 	
 	public List<AppUser> getAppUsers(){
 		
@@ -37,6 +30,15 @@ public class UserDaoService implements UserDetailsService{
 		AppUser regUser = 
 				new AppUser("smith", "Jay", "smith@gmail.com", this.passwordEncoder.encode("password"), true, true, true, true, Role.ADMIN);
 		return Arrays.asList(admin, regUser);
+	}
+
+	@Override
+	public Optional<AppUser> selectAppUserByUsername(String username) {
+		
+		return this.getAppUsers()
+				.stream()
+				.filter((appUser) -> appUser.getUsername().equals(username))
+				.findFirst();
 	}
 	
 
