@@ -4,11 +4,13 @@ package com.sgenlecroyant.security.book.controller;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.security.RolesAllowed;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +38,7 @@ public class BookController {
 	}
 
 	@PostMapping(value = "/books")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 //	@Secured("hasRole('ROLE_ADMIN')")
 	private ResponseEntity<Book> saveBook(@RequestBody Book book){
 		return new ResponseEntity<Book>(this.bookService.saveBook(book), HttpStatus.OK);
@@ -44,6 +46,7 @@ public class BookController {
 	
 	@PatchMapping(value = "/books/{id}")
 //	@PreAuthorize(value = "hasRole('ROLE_ADMIN')")
+//	@PostAuthorize("isAuthenticated()")
 	private ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book){
 		return new ResponseEntity<Book>(this.bookService.updateBook(id, book), HttpStatus.OK);
 	}
@@ -57,6 +60,7 @@ public class BookController {
 	
 	@GetMapping(value = "/books")
 //	@PreAuthorize(value = "hasAnyRole('ROLE_ADMIN', 'ROLE_REG_USER')")
+//	@Secured("ROLE_ADMIN")
 	private ResponseEntity<List<Book>> fetchBooks(){
 		return new ResponseEntity<List<Book>>(this.bookService.fetchBooks(), HttpStatus.OK);
 	}

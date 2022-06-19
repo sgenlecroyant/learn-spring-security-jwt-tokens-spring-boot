@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -24,17 +25,18 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.sgenlecroyant.security.config.websecurity.authentication.AppUserService;
+import com.sgenlecroyant.security.config.websecurity.authority.Permission;
 import com.sgenlecroyant.security.config.websecurity.authority.Role;
 
 // @formatter:off
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(jsr250Enabled = true)
+@EnableGlobalMethodSecurity(jsr250Enabled = true, prePostEnabled = true, securedEnabled = true)
 public class AppSecurityConfig {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private AppUserService appUserService;
 
@@ -47,8 +49,10 @@ public class AppSecurityConfig {
 							.headers().frameOptions().disable()
 							.and()
 							.authorizeHttpRequests()
-							.antMatchers(HttpMethod.GET, "/", "/css", "/js").hasRole(Role.ADMIN.getRole())
-							.antMatchers("/h2-console/**").permitAll()
+//							.antMatchers(HttpMethod.GET, "/", "/css", "/js").hasRole(Role.ADMIN.getRole())
+//							.antMatchers("/h2-console/**").permitAll()
+							.antMatchers(HttpMethod.GET, "/books").hasRole(Role.ADMIN.getRole())
+							.antMatchers(HttpMethod.GET, "/books").hasAuthority(Permission.BOOK_WRITE.getPermission())
 //							.antMatchers(HttpMethod.POST, "/books/**").hasRole(Role.ADMIN.getRole())
 //							.antMatchers(HttpMethod.PATCH, "/books/**").hasRole(Role.ADMIN.getRole())
 //							.antMatchers(HttpMethod.DELETE, "/books/**").hasRole(Role.ADMIN.getRole())
@@ -62,11 +66,20 @@ public class AppSecurityConfig {
 		
 		return webSecurityConfigurer;
 	}
+	
+//	@Bean
+//	public AuthenticationManager getAuthenticationManager(AuthenticationConfiguration authConfigurer) throws Exception {
+//		AuthenticationManager authenticationManager = authConfigurer.getAuthenticationManager();
+//		
+//		 return authenticationManager;
+//	}
 
+	
 	protected void configureAuthenticationManager(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(getAuthenticationManager());
 	}
 	
+	@Bean
 	public AuthenticationProvider getAuthenticationManager() {
 		DaoAuthenticationProvider daoAuthenticationProvider = 
 				new DaoAuthenticationProvider();

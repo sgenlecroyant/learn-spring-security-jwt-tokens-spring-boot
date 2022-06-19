@@ -1,8 +1,11 @@
 package com.sgenlecroyant.security.config.websecurity.authentication;
 
+import java.sql.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import javax.sql.rowset.serial.SerialArray;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +31,7 @@ public class UserDaoService implements UserDao{
 				new AppUser("James", "Bond", "james@gmail.com", this.passwordEncoder.encode("password"), true, true, true, true, Role.ADMIN);
 		
 		AppUser regUser = 
-				new AppUser("smith", "Jay", "smith@gmail.com", this.passwordEncoder.encode("password"), true, true, true, true, Role.ADMIN);
+				new AppUser("smith", "Jay", "smith@gmail.com", this.passwordEncoder.encode("password"), true, true, true, true, Role.REG_USER);
 		return Arrays.asList(admin, regUser);
 	}
 
