@@ -38,7 +38,7 @@ public class BookController {
 	}
 
 	@PostMapping(value = "/books")
-//	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 //	@Secured("hasRole('ROLE_ADMIN')")
 	private ResponseEntity<Book> saveBook(@RequestBody Book book){
 		return new ResponseEntity<Book>(this.bookService.saveBook(book), HttpStatus.OK);

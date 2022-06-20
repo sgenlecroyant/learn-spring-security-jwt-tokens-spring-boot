@@ -31,7 +31,7 @@ import com.sgenlecroyant.security.config.websecurity.authority.Role;
 // @formatter:off
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(jsr250Enabled = true, prePostEnabled = true, securedEnabled = true)
+//@EnableGlobalMethodSecurity(jsr250Enabled = true, prePostEnabled = true, securedEnabled = true)
 public class AppSecurityConfig {
 
 	@Autowired
@@ -49,9 +49,9 @@ public class AppSecurityConfig {
 							.headers().frameOptions().disable()
 							.and()
 							.authorizeHttpRequests()
-//							.antMatchers(HttpMethod.GET, "/", "/css", "/js").hasRole(Role.ADMIN.getRole())
-//							.antMatchers("/h2-console/**").permitAll()
-							.antMatchers(HttpMethod.GET, "/books").hasRole(Role.ADMIN.getRole())
+							.antMatchers(HttpMethod.GET, "/", "/css", "/js").hasRole(Role.ADMIN.getRole())
+							.antMatchers("/h2-console/**").permitAll()
+							.antMatchers(HttpMethod.GET, "/books").hasRole(Role.REG_USER.getRole())
 							.antMatchers(HttpMethod.GET, "/books").hasAuthority(Permission.BOOK_WRITE.getPermission())
 //							.antMatchers(HttpMethod.POST, "/books/**").hasRole(Role.ADMIN.getRole())
 //							.antMatchers(HttpMethod.PATCH, "/books/**").hasRole(Role.ADMIN.getRole())
