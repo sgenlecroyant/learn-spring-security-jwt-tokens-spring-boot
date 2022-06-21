@@ -24,11 +24,8 @@ import com.sgenlecroyant.security.config.websecurity.authority.Role;
 @SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter{
 	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
 	
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
