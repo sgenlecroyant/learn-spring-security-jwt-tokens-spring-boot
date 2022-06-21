@@ -40,8 +40,8 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter{
 //		.antMatchers(HttpMethod.GET, "/", "/css", "/js").permitAll()
 //		.antMatchers("/h2-console/**").permitAll()
 		.anyRequest()
-//		.authenticated()
-		.permitAll()
+		.authenticated()
+//		.permitAll()
 			.and()
 			.httpBasic();
 //			.formLogin()
