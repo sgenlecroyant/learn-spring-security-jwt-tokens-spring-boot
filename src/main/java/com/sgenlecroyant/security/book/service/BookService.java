@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import com.sgenlecroyant.security.book.action.OnBookAction;
 import com.sgenlecroyant.security.book.entity.Book;

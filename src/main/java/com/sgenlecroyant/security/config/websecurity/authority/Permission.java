@@ -1,3 +1,4 @@
+//package com.sgenlecroyant.security;
 package com.sgenlecroyant.security.config.websecurity.authority;
 
 public enum Permission {
