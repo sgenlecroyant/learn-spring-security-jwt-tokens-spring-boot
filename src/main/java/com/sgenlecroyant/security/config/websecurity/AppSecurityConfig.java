@@ -31,11 +31,11 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		
 		httpSecurity.csrf().disable()
-//		.headers().frameOptions().disable()
-//		.and()
+		.headers().frameOptions().disable()
+		.and()
 		.authorizeHttpRequests()
-//		.antMatchers(HttpMethod.GET, "/", "/css", "/js").permitAll()
-//		.antMatchers("/h2-console/**").permitAll()
+		.antMatchers(HttpMethod.GET, "/", "/css", "/js").permitAll()
+		.antMatchers("/h2-console/**").permitAll()
 		.anyRequest()
 		.authenticated()
 //		.permitAll()
