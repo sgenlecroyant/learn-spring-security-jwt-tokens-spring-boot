@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import com.sgenlecroyant.security.config.websecurity.authority.Role;
+import com.sgenlecroyant.security.config.websecurity.jwt.JwtUsernamePasswordAuthenticationFilter;
 
 // @formatter:off
 @SuppressWarnings("deprecation")
@@ -32,9 +33,11 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		
 		http.csrf().disable()
+		.addFilter(new JwtUsernamePasswordAuthenticationFilter(this.authenticationManager()))
 		.headers().frameOptions().disable()
 		.and()
 		.authorizeHttpRequests()
+		.antMatchers("/login").permitAll()
 		.antMatchers(HttpMethod.DELETE, "/books/**").hasRole(Role.ADMIN.getRole())
 		.antMatchers(HttpMethod.POST, "/books/**").hasRole(Role.ADMIN.getRole())
 		.antMatchers(HttpMethod.GET, "/books/**").hasAnyRole(Role.REG_USER.getRole())
