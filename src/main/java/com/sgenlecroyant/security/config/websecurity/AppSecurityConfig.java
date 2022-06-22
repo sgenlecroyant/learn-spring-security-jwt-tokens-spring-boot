@@ -15,7 +15,7 @@ import com.sgenlecroyant.security.config.websecurity.authority.Role;
 @SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = false)
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Override
@@ -26,10 +26,9 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter{
 		.headers().frameOptions().disable()
 		.and()
 		.authorizeHttpRequests()
-//		.antMatchers(HttpMethod.POST, "/books/**").hasRole(Role.ADMIN.getRole())
-//		.antMatchers(HttpMethod.PATCH, "/books/**").hasRole(Role.ADMIN.getRole())
-//		.antMatchers(HttpMethod.DELETE, "/books/**").hasRole(Role.ADMIN.getRole())
-//		.antMatchers(HttpMethod.GET, "/books/**").hasAnyRole(Role.ADMIN.getRole())
+		.antMatchers(HttpMethod.DELETE, "/books/**").hasRole(Role.ADMIN.getRole())
+		.antMatchers(HttpMethod.POST, "/books/**").hasRole(Role.ADMIN.getRole())
+		.antMatchers(HttpMethod.GET, "/books/**").hasAnyRole(Role.REG_USER.getRole())
 		.anyRequest().authenticated()
 			.and()
 			.httpBasic();
