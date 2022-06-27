@@ -3,7 +3,6 @@ package com.sgenlecroyant.security.config.websecurity.auth;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.UUID;
 
@@ -23,16 +22,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.sgenlecroyant.security.excepton.CustomBadCredentialsException;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 public class JwtUsernamePasswordAuthFilter extends UsernamePasswordAuthenticationFilter {
-	@JsonSerialize(using = ResponseMessageSerializer.class)
-	@JsonDeserialize(using = ResponseMessageDeserializer.class)
-	Message message = new Message("Auhentication Failed", "Bad Credentials");
+	
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 	private final ProviderManager providerManager;
@@ -75,8 +71,9 @@ public class JwtUsernamePasswordAuthFilter extends UsernamePasswordAuthenticatio
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException failed) throws IOException, ServletException {
-
-
+		response.setStatus(HttpStatus.UNAUTHORIZED.value());
+		response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+		response.getWriter().print("Bad Credentials");
 	}
 
 }
