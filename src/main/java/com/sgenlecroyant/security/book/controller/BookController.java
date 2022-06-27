@@ -30,7 +30,6 @@ public class BookController {
 	private BookService bookService;
 
 	@GetMapping(value = "/books/{id}")
-//	@PreAuthorize(value = "hasRole('ROLE_ADMIN')")
 	private ResponseEntity<Book> fetchBookById(@PathVariable Long id){
 		Book book = this.bookService.fetchBookById(id).get();
 //		Book book2 = this.bookRepository.findById(id).get();
@@ -38,29 +37,22 @@ public class BookController {
 	}
 
 	@PostMapping(value = "/books")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-//	@Secured("hasRole('ROLE_ADMIN')")
 	private ResponseEntity<Book> saveBook(@RequestBody Book book){
 		return new ResponseEntity<Book>(this.bookService.saveBook(book), HttpStatus.OK);
 	}
 	
 	@PatchMapping(value = "/books/{id}")
-//	@PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-//	@PostAuthorize("isAuthenticated()")
 	private ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book){
 		return new ResponseEntity<Book>(this.bookService.updateBook(id, book), HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value = "/books/{id}")
-//	@PreAuthorize(value = "hasAuthority('book:write')")
 	private ResponseEntity<HttpStatus> deleteBookById(@PathVariable Long id){
 		this.bookService.deleteBookById(id);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 	
 	@GetMapping(value = "/books")
-//	@PreAuthorize(value = "hasAnyRole('ROLE_ADMIN', 'ROLE_REG_USER')")
-//	@Secured("ROLE_ADMIN")
 	private ResponseEntity<List<Book>> fetchBooks(){
 		return new ResponseEntity<List<Book>>(this.bookService.fetchBooks(), HttpStatus.OK);
 	}

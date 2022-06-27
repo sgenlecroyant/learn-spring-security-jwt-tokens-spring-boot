@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -24,6 +25,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.sgenlecroyant.security.config.websecurity.auth.JwtUsernamePasswordAuthFilter;
 import com.sgenlecroyant.security.config.websecurity.authentication.AppUserService;
 import com.sgenlecroyant.security.config.websecurity.authority.Permission;
 import com.sgenlecroyant.security.config.websecurity.authority.Role;
@@ -39,14 +41,17 @@ public class AppSecurityConfig {
 
 	@Autowired
 	private AppUserService appUserService;
+	
 
 	@Bean
 	public SecurityFilterChain getWebSecurityConfigurer(HttpSecurity httpSecurity) throws Exception {
-
+		
 		DefaultSecurityFilterChain webSecurityConfigurer = 
 				
 				httpSecurity.csrf().disable()
+				.addFilter(new JwtUsernamePasswordAuthFilter(new ProviderManager(this.getAuthenticationManager(), this.getAuthenticationManager()), this.getAuthenticationManager()))
 							.headers().frameOptions().disable()
+							
 							.and()
 							.authorizeHttpRequests()
 							.anyRequest().authenticated()
@@ -68,7 +73,7 @@ public class AppSecurityConfig {
 
 	
 	protected void configureAuthenticationManager(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(getAuthenticationManager());
+		AuthenticationManagerBuilder authenticationProvider = auth.authenticationProvider(getAuthenticationManager());
 	}
 	
 	@Bean
