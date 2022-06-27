@@ -28,10 +28,10 @@ public class UserDaoService implements UserDao{
 	public List<AppUser> getAppUsers(){
 		
 		AppUser admin = 
-				new AppUser("James", "Bond", "james@gmail.com", this.passwordEncoder.encode("password"), true, true, true, true, Role.ADMIN);
+				new AppUser("James", "Bond", "admin@gmail.com", this.passwordEncoder.encode("password"), true, true, true, true, Role.ADMIN);
 		
 		AppUser regUser = 
-				new AppUser("smith", "Jay", "smith@gmail.com", this.passwordEncoder.encode("password"), true, true, true, true, Role.REG_USER);
+				new AppUser("smith", "Jay", "user@gmail.com", this.passwordEncoder.encode("password"), true, true, true, true, Role.REG_USER);
 		return Arrays.asList(admin, regUser);
 	}
 
