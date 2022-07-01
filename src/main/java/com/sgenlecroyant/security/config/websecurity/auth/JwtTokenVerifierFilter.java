@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.lang.Strings;
@@ -37,20 +38,43 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
 		String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
 		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+			System.out.println("exception ...");
 			throw new RuntimeException("Invalid Token");
-		} else {
+		} 
+			System.out.println("no exception");
 			String token = authorizationHeader.replace("Bearer ", "");
+			
+//			@SuppressWarnings("deprecation")
+//			Jws<Claims> claims = Jwts.parser()
+//				.setSigningKey(Keys.hmacShaKeyFor(someSecretKey.getBytes()))
+//				.parseClaimsJws(token);
+//			
+//			Claims body = claims.getBody();
+//			String username = body.getSubject();
+			
+			
+			
+			@SuppressWarnings("deprecation")
+			Jws<Claims> claims = Jwts.parser()
+				.setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
+				.parseClaimsJws(token);
+			
+			Claims body = claims.getBody();
+			String username = body.getSubject();
+			@SuppressWarnings("unchecked")
+			List<Map<String, String>> authorities = (List<Map<String, String>>)body.get("authorities");
+			
 
-//			Set<GrantedAuthority> grantedAuthorities = authorities
-//						.stream()
-//						.map((authority) -> new SimpleGrantedAuthority(authority.get("authority")))
-//						.collect(Collectors.toSet());
-//			
-//			Authentication authenticationRequest = new UsernamePasswordAuthenticationToken(username, null, grantedAuthorities);
-//			
-//			SecurityContextHolder.getContext().setAuthentication(authenticationRequest);
-//			filterChain.doFilter(request, response);
-		}
+			Set<GrantedAuthority> grantedAuthorities = authorities
+						.stream()
+						.map((authority) -> new SimpleGrantedAuthority(authority.get("authority")))
+						.collect(Collectors.toSet());
+			
+			Authentication authenticationRequest = new UsernamePasswordAuthenticationToken(username, null, grantedAuthorities);
+			
+			SecurityContextHolder.getContext().setAuthentication(authenticationRequest);
+			filterChain.doFilter(request, response);
+		
 
 	}
 
