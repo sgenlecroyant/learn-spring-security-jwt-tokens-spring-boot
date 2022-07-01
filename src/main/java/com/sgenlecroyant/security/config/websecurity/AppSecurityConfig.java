@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.sgenlecroyant.security.config.websecurity.auth.JwtTokenVerifierFilter;
 import com.sgenlecroyant.security.config.websecurity.auth.JwtUsernamePasswordAuthFilter;
 import com.sgenlecroyant.security.config.websecurity.authentication.AppUserService;
 
@@ -37,6 +38,7 @@ public class AppSecurityConfig {
 				
 				httpSecurity.csrf().disable()
 				.addFilter(new JwtUsernamePasswordAuthFilter(new ProviderManager(this.getAuthenticationManager(), this.getAuthenticationManager()), this.getAuthenticationManager()))
+				.addFilterAfter(new JwtTokenVerifierFilter(), JwtUsernamePasswordAuthFilter.class)
 							.headers().frameOptions().disable()
 							
 							.and()
